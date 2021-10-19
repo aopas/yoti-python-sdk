@@ -25,7 +25,7 @@ DEFAULT_HTTP_CLIENT_ERRORS = {"default": UNKNOWN_HTTP_ERROR}
 
 
 class Client(object):
-    def __init__(self, sdk_id=None, pem_file_path=None, request_handler=None):
+    def __init__(self, sdk_id=None, pem_file_path=None, request_handler=None, private_key_env=None):
         self.sdk_id = sdk_id or environ.get("YOTI_CLIENT_SDK_ID")
         pem_file_path_env = environ.get("YOTI_KEY_FILE_PATH", pem_file_path)
 
@@ -35,6 +35,9 @@ class Client(object):
         elif pem_file_path_env is not None:
             error_source = "specified by the YOTI_KEY_FILE_PATH env variable"
             self.__crypto = Crypto.read_pem_file(pem_file_path_env, error_source)
+        elif private_key_env is not None:
+            error_source = "specified by the YOTI_KEY env variable"
+            self.__crypto = Crypto.read_private_key(private_key_env, error_source)
         else:
             raise RuntimeError(NO_KEY_FILE_SPECIFIED_ERROR)
 

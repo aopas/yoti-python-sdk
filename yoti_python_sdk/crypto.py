@@ -85,3 +85,14 @@ class Crypto:
             )
             exception = "{0}: {1}".format(type(exc).__name__, exc)
             raise RuntimeError("{0}: {1}".format(error, exception))
+
+    @staticmethod
+    def read_private_key(private_key, error_source=None):
+        try:
+            return Crypto(private_key.strip())
+        except (AttributeError, IOError, TypeError, OSError) as exc:
+            error = "Could not read private key file: '{0}', passed as: {1}".format(
+                "key_file_path", error_source
+            )
+            exception = "{0}: {1}".format(type(exc).__name__, exc)
+            raise RuntimeError("{0}: {1}".format(error, exception))
